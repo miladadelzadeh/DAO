@@ -10,6 +10,7 @@
         *{text-align: center;}
         h2{background: rgb(34, 129, 160);width: 600px;margin: auto;color:white;margin-top: 40px;
             border-bottom:3px groove rgb(111, 151, 51);border-top:2px groove rgb(111, 151, 51);}
+        h4{background: rgb(198, 236, 248);margin: 0px;padding: 15px 0px;} 
         .myClass{width:350px;color:red;box-shadow: green 3px 3px 3px;}
         .private{width:550px;color:rgb(158, 12, 12);box-shadow: rgb(5, 255, 5) 3px 3px 3px;}
         #txtAddress2{width:350px !important;}
@@ -42,10 +43,28 @@
             <p><input type="button" onClick="removeMemberDirectly()" value="Remove Member"/></p><p id="addMemberPanel"></p><hr/>
             -->
             <h2>Get member information</h2>
+            <h4>
+                In this section you can get information of the member.<br/>
+                The member must be join the congress earlier.<br/>
+                First member of this example is smart contract deployer.<br/>
+                Its public key of the first member is : "0xe1844C3DF22b6c5296C0BB0B1106eFDe73Eb844f".
+
+            </h4>
             <p><input type="text" placeholder="Enter account address" id="txtMember1" class="myClass"/></p>
             <p><input type="button" onClick="getMember()" value="Get Member"/></p><p id="getMemberPanel"></p><hr/>
 
             <h2>Add Proposal</h2>
+            <h4>
+                    In this section a proposal add to congress proposals.<br/>
+                    In top of this section must input one of the members information.<br/>
+                    If you want to add or remove member in first step you must create a proposal.<br/>
+                    For accomplish this proposal must obtains quorum and you execute it obviously in the next steps.<br/>  
+                    When a member is added give it 1000 tokens.<br/>
+                    When a member creates a new proposal for member adding get it 50 tokens.<br/>
+                    Also when a member creates a new proposal for member removing get it 40 tokens.<br/>
+                    <b>Notice:</b> After adding proposal remember the result of this section (Proposal ID).
+                  
+            </h4>
             <p><input type="text" placeholder="Enter account address" id="accountAddress3" class="myClass"/></p>
             <p class="underline"><input type="text" placeholder="Enter Private key" id="txtPrivate3" class="private"/></p>
             <p><label for="numAmount">Ether amount: &nbsp;</label><input type="number" id="numAmount" value="0" min="0"/></p>
@@ -67,12 +86,14 @@
             <p id="answerAddProposal" class="container"></p><hr/>
 
             <h2>Get proposal by ID</h2>
+            <h4>You get member informations in this section from its account address.</h4>
             <p><input type="text" placeholder="Enter account address" id="accountAddress4" class="myClass"/></p>
             <p><label for="numGetProposal">Proposal ID &nbsp;</label><input type="number" id="numGetProposal" value="0" min="0"/></p>
             <p><input type="button" onClick="getProposal()" value="Get Proposal"/></p>
             <p id="proposalInfo" class="container"></p><hr/>
 
             <h2>Vote section</h2>
+            <h4>In this section,you can vote to the proposal simply.</h4>
             <p><input type="text" placeholder="Enter account address" id="accountAddress5" class="myClass"/></p>
             <p class="underline"><input type="text" placeholder="Enter your Private key" id="txtPrivate2" class="private"/></p>
             <p><label for="numForVote">Proposal ID &nbsp;</label><input type="number" id="numForVote" value="0" min="0"/></p>
@@ -82,6 +103,10 @@
             <p id="voteResult" class="container"></p><hr/>
 
             <h2>Execute proposal</h2>
+            <h4>
+                Last step is proposal execution.<br/>
+                Try to do this step carely and please enter the proposal number correctly
+            </h4>
             <p><input type="text" placeholder="Enter account address" id="accountAddress6" class="myClass"/></p>
             <p class="underline"><input type="text" placeholder="Enter your Private key" id="txtPrivate4" class="private"/></p>
             <p><label for="numForExec">Proposal ID &nbsp;</label><input type="number" id="numForExec" value="0" min="0"/></p>
