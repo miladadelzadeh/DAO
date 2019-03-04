@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ethereum DAO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="jquery.js"></script>
+    <script src="web3.min.js"></script>
+    <style>
+        *{text-align: center;}
+        h2{background: rgb(34, 129, 160);width: 600px;margin: auto;color:white;margin-top: 40px;
+            border-bottom:3px groove rgb(111, 151, 51);border-top:2px groove rgb(111, 151, 51);}
+        .myClass{width:350px;color:red;box-shadow: green 3px 3px 3px;}
+        .private{width:550px;color:rgb(158, 12, 12);box-shadow: rgb(5, 255, 5) 3px 3px 3px;}
+        #txtAddress2{width:350px !important;}
+        .underline{border-bottom: 3px groove greenyellow;}
+        #memberPanel{width: 600px;margin: auto;}
+        #memberPanel p{width:600px;height: 50px;line-height: 50px; background: lightblue;margin: auto;}
+        .container{background: rgb(107, 196, 226) !important;display: none;}
+        input[type="button"]{width:130px;height: 30px;font-weight: bold;background:rgb(21, 101, 180);
+            box-shadow: cyan 3px 3px 2px;color:white;border-radius: 15px;}
+        #getMemberPanel{height: 150px !important;display: none;}
+        #numProposal{width: 50px;}
+        #txtDescription{width:450px;}
+        #txtDetails{width:250px;height: 50px;}
+        #proposalInfo{height: 400px;}
+        #memberPanel p span{font-weight: bold;}
+    </style>
+
+</head>
+<body>
+    <h1>Welcome to Fudation Decentralized Autonomous Organization (DAO)</h1>
+    <form>
+        <div id="memberPanel">
+            <!--
+            <h2>Add or remove member</h2>
+            <p><input type="text" placeholder="Enter base account address" id="accountAddress1" class="myClass"/></p>
+            <p class="underline"><input type="text" placeholder="Enter base Private key" id="txtPrivate1" class="myClass"/></p>
+            <p><input type="text" placeholder="Enter member Address" id="txtAddress1" class="myClass"/></p>
+            <p><input type="text" placeholder="Enter Name" id="txtName1"/></p>
+            <p><input type="button" onClick="addMemberDirectly()" value="Add Member"/></p>
+            <p><input type="button" onClick="removeMemberDirectly()" value="Remove Member"/></p><p id="addMemberPanel"></p><hr/>
+            -->
+            <h2>Get member information</h2>
+            <p><input type="text" placeholder="Enter account address" id="txtMember1" class="myClass"/></p>
+            <p><input type="button" onClick="getMember()" value="Get Member"/></p><p id="getMemberPanel"></p><hr/>
+
+            <h2>Add Proposal</h2>
+            <p><input type="text" placeholder="Enter account address" id="accountAddress3" class="myClass"/></p>
+            <p class="underline"><input type="text" placeholder="Enter Private key" id="txtPrivate3" class="private"/></p>
+            <p><label for="numAmount">Ether amount: &nbsp;</label><input type="number" id="numAmount" value="0" min="0"/></p>
+            <p><label for="numProposal">Deadline(Days): &nbsp;</label><input type="number" id="numProposal" value="0" min="0"/></p>
+            <p><input type="text" placeholder="Enter Description" id="txtDescription"/></p>
+            <p><textarea placeholder="Enter Details" id="txtDetails"></textarea></p>
+            <p><input type="text" placeholder="Enter Attachments" id="txtAttachment"/></p>
+            <p>
+                <label for="rdbOther">Other</label>
+                <input type="radio" name="rdbProposal" id="rdbOther" checked/>&nbsp;&nbsp;&nbsp;&nbsp;
+                <label for="rdbAdd">Add member</label>
+                <input type="radio" name="rdbProposal" id="rdbAdd"/>&nbsp;&nbsp;&nbsp;&nbsp;
+                <label for="rdbRemove">Remove member</label>
+                <input type="radio" name="rdbProposal" id="rdbRemove"/>
+            </p>
+            <p><input type="text" placeholder="Enter Address" id="txtAddress2" disabled/></p>
+            <p><input type="text" placeholder="Enter Name" id="txtName2" disabled/></p>
+            <p><input type="button" onClick="addProposal()" value="Add Proposal"/></p>
+            <p id="answerAddProposal" class="container"></p><hr/>
+
+            <h2>Get proposal by ID</h2>
+            <p><input type="text" placeholder="Enter account address" id="accountAddress4" class="myClass"/></p>
+            <p><label for="numGetProposal">Proposal ID &nbsp;</label><input type="number" id="numGetProposal" value="0" min="0"/></p>
+            <p><input type="button" onClick="getProposal()" value="Get Proposal"/></p>
+            <p id="proposalInfo" class="container"></p><hr/>
+
+            <h2>Vote section</h2>
+            <p><input type="text" placeholder="Enter account address" id="accountAddress5" class="myClass"/></p>
+            <p class="underline"><input type="text" placeholder="Enter your Private key" id="txtPrivate2" class="private"/></p>
+            <p><label for="numForVote">Proposal ID &nbsp;</label><input type="number" id="numForVote" value="0" min="0"/></p>
+            <p><label for="chkForVote">Yes/No &nbsp;</label><input type="checkbox" id="chkForVote"/></p>
+            <p><input type="text" placeholder="Enter Justification" id="txtJustification" class="myClass"/></p>
+            <p><input type="button" onClick="vote()" value="Vote"/></p>
+            <p id="voteResult" class="container"></p><hr/>
+
+            <h2>Execute proposal</h2>
+            <p><input type="text" placeholder="Enter account address" id="accountAddress6" class="myClass"/></p>
+            <p class="underline"><input type="text" placeholder="Enter your Private key" id="txtPrivate4" class="private"/></p>
+            <p><label for="numForExec">Proposal ID &nbsp;</label><input type="number" id="numForExec" value="0" min="0"/></p>
+            <p><input type="button" onClick="exec()" value="Execute Proposal"/></p>
+            <p id="executeResult" class="container"></p><hr/>
+            <h2>Add ethereum account</h2>
+            <p><input type="button" onClick="createAccount()" value="Add Account"/></p>
+            <p id="publicPanel"></p>
+            <p id="privatePanel"></p>
+            <h1>Created by Milad Adelzadeh</h1>
+        </div>
+        <div id="membersPanel"></div>
+        
+    </form>
+    <script>
+        if (typeof web3 !== 'undefined') { 
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/e54e66c0e9724f059d4bb2b9efc263a8"));
+        }
+        var contractAddress="0x1b8464750c4b88a514894046c8b3a1fc2a7aeb5c";
+        var abi=[{"constant":false,"inputs":[{"name":"targetMember","type":"address"}],"name":"removeMember","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"proposalId","type":"uint256"}],"name":"executeProposal","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_account","type":"address"}],"name":"getMember","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"numProposals","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"members","outputs":[{"name":"account","type":"address"},{"name":"name","type":"string"},{"name":"memberSince","type":"uint256"},{"name":"token","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_recipient","type":"address"},{"name":"_amount","type":"uint256"},{"name":"_dayDeadLine","type":"uint256"},{"name":"_typeOfProposal","type":"uint8"},{"name":"_account","type":"address"},{"name":"_accountName","type":"string"},{"name":"_description","type":"string"},{"name":"_details","type":"string"},{"name":"_attachments","type":"string"}],"name":"newProposal","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"minimumQuorum","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"majorityMargin","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"deadLine","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_account","type":"address"},{"name":"_name","type":"string"}],"name":"addMember","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_id","type":"uint256"}],"name":"getProposal","outputs":[{"name":"recipient","type":"address"},{"name":"amount","type":"uint256"},{"name":"desc","type":"string"},{"name":"details","type":"string"},{"name":"min","type":"uint256"},{"name":"exec","type":"bool"},{"name":"voteNums","type":"uint256"},{"name":"current","type":"uint256"},{"name":"types","type":"uint256"},{"name":"account","type":"address"},{"name":"name","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"proposalNumber","type":"uint256"},{"name":"supportsProposal","type":"bool"},{"name":"justificationText","type":"string"}],"name":"vote","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"member","outputs":[{"name":"account","type":"address"},{"name":"name","type":"string"},{"name":"memberSince","type":"uint256"},{"name":"token","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":true,"stateMutability":"payable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"sender","type":"address"},{"indexed":false,"name":"amount","type":"uint256"}],"name":"receivedEther","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"account","type":"address"},{"indexed":false,"name":"isMember","type":"bool"}],"name":"MembershipChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"proposalId","type":"uint256"}],"name":"ProposalAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"support","type":"bool"},{"indexed":false,"name":"account","type":"address"},{"indexed":false,"name":"comment","type":"string"},{"indexed":false,"name":"numbers","type":"uint256"}],"name":"Voted","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"currentResult","type":"uint256"},{"indexed":false,"name":"voteNumbers","type":"uint256"},{"indexed":false,"name":"types","type":"uint256"},{"indexed":false,"name":"account","type":"address"},{"indexed":false,"name":"name","type":"string"}],"name":"ProposalExecuted","type":"event"}];
+        var myContract = new web3.eth.Contract(abi, contractAddress);
+        var adddersses=[];
+        /*
+        myContract.methods.getMembers().call({from:baseAccount},function(err,res){
+            var flag=false;
+            var temp=new Array();
+            var j=0;
+            adddersses=JSON.stringify(res[0]);
+            adddersses.split('"');
+            for(i=0;i<adddersses.length;i++){
+                if(adddersses[i]=='"'){
+                    if(flag){
+                        flag=false;
+                        j++;
+                    }else{
+                        flag=true;
+                        temp[j]=[];
+                    }
+                }
+                if(flag && adddersses[i] != '"'){
+                    temp[j]+=adddersses[i];
+                }
+            }
+            for(i=0;i<j;i++){
+                //temp[i]=temp[i].substr(9);
+                $(".select").append("<option>"+temp[i]+"</option>");                        
+            }
+        });
+        */
+        var proposalType=0;
+        $('input[name=rdbProposal]').eq(0).click(function(){
+            $('#txtAddress2').attr('disabled',true);
+            $('#txtName2').attr('disabled',true);
+            proposalType=0;
+        });
+        $('input[name=rdbProposal]').eq(1).click(function(){
+            $('#txtAddress2').attr('disabled',false);
+            $('#txtName2').attr('disabled',false);
+            proposalType=1;
+        });
+        $('input[name=rdbProposal]').eq(2).click(function(){
+            $('#txtAddress2').attr('disabled',false);
+            $('#txtName2').attr('disabled',true);
+            proposalType=2;
+        });
+        myContract.events.ProposalAdded(function(error,result){
+            $('#answerAddProposal').show();
+            var contents='This proposal added with ID = ';
+            contents+=result.returnValues.proposalId;
+            $('#answerAddProposal').html(contents);
+        });
+        myContract.events.Voted(function(error,result){
+            $('#voteResult').show();
+            var contents='The numbers of votes = ';
+            contents+=result.returnValues.numbers;
+            $('#voteResult').html(contents);
+        });
+        myContract.events.ProposalExecuted(function(error,result){
+            $('#executeResult').show();
+            var contents='Number of votes = ';
+            contents+=result.returnValues.voteNumbers;
+            contents+=" and Positive votes = "
+            contents+=result.returnValues.currentResult;
+            $('#executeResult').html(contents);
+            /*
+            var types=result.returnValues.types;
+            var account=result.returnValues.account;
+            var name=result.returnValues.name;
+            if(types==1){
+                addMember(account,name);
+            }else if(type==2){
+                removeMember(account);
+            }
+            */
+        });
+        //myContract.ProposalAdded().watch(function(error,result){
+        //    console.log(result.args.proposalId);
+        //});
+        function addMemberDirectly(){
+            var memberAccount1=$('#txtAddress1').val();
+            var memberName1=$('#txtName1').val();
+            addMember(memberAccount1,memberName1);
+        }
+        function removeMemberDirectly(){
+            var memberAccount1=$('#txtAddress1').val();
+            removeMember(accountAddress);
+        }
+        function timeConverter(UNIX_timestamp){
+            var a = new Date(UNIX_timestamp * 1000);
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var year = a.getFullYear();
+            var month = months[a.getMonth()];
+            var date = a.getDate();
+            var hour = a.getHours();
+            var min = a.getMinutes();
+            var sec = a.getSeconds();
+            var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+            return time;
+        }
+        function getMember(){
+            $('#getMemberPanel').html('');
+            
+            var myAccount=$("#txtMember1").val();
+            if(!web3.utils.isAddress(myAccount)){
+                alert("Input address is not valid!");
+            }else{
+                $('#getMemberPanel').show();
+                myContract.methods.getMember(myAccount).call({from:myAccount},function(err,res){
+                    if(!err){
+                        var result="<p>The name: <span>"+JSON.stringify(res[0])+
+                            "</span></p><p>Time of membership: <span>"+timeConverter(res[1])+"</span></p>"+
+                            "<p>Amount of token: <span>"+res[2]+"</span></p>";
+                        //var myDate=new Date(res[1]*1000);
+                        //var result=myDate.getHours()+":"+("0"+myDate.getMinutes()).substr(-2)+":"+("0"+myDate.getSeconds()).substr(-2);
+                        $('#getMemberPanel').html(result);
+                    }else{
+                        $('#getMemberPanel').html("This member is not exist");
+                    }
+                });
+            }
+        }
+        /*
+        function getMembers(){
+            myContract.methods.getMembers().call({from:accountAddress},function(err,res){
+                if(!err){
+                    $('#getMembersPanel').html(JSON.stringify(res));
+                }else{
+                    $('#getMembersPanel').html(err);
+                }
+            })
+        }
+        */
+        function addMember(_account,_name){
+            var accountAddress=$('#accountAddress1').val();
+            var privateKey='0x';
+            privateKey+=$('#txtPrivate1').val();
+            let _nonce = web3.eth.getTransactionCount(accountAddress).then();
+            let _chainid = web3.eth.net.getId().then();
+            let _gassPrice = web3.eth.getGasPrice().then();
+            let encoded_tx = myContract.methods.addMember(_account,_name).encodeABI();
+            let _gas = myContract.methods.addMember(_account,_name).estimateGas({ from: accountAddress }).then();
+            var transactionObject;
+            Promise.all([_nonce, _chainid, _gassPrice, _gas])
+                .then(function(values) {
+                    console.log(values[0], values[1], values[2], values[3])
+                    transactionObject = {
+                        to: contractAddress,
+                        from: accountAddress,
+                        data: encoded_tx,
+                        value: '0x0',
+                        nonce: web3.utils.toHex(values[0]),
+                        chainId: web3.utils.toHex(values[1]),
+                        gasPrice: web3.utils.toHex(values[2]),
+                        gas: web3.utils.toHex(values[3]),
+                        networkId: 3 ,
+                    };
+                    console.log(transactionObject);
+                    web3.eth.accounts.signTransaction(transactionObject, privateKey)
+                        .then((res) => {
+                            web3.eth.sendSignedTransaction(res.rawTransaction)
+                                .on('receipt', (res) => {
+                                    //$('#addMemberPanel').append("<p>One member added</p>");
+                                    console.log(res);
+                                });
+                        }).catch((err) => {
+                            //$('#addMemberPanel').append("<p>"+err+"</p>");
+                            console.log(err);
+                        });       
+                });
+        }
+        function removeMember(_account){
+            var accountAddress=$('#accountAddress1').val();
+            var privateKey='0x';
+            privateKey+=$('#txtPrivate1').val();
+            let _nonce = web3.eth.getTransactionCount(accountAddress).then();
+            let _chainid = web3.eth.net.getId().then();
+            let _gassPrice = web3.eth.getGasPrice().then();
+            let encoded_tx = myContract.methods.removeMember(_account).encodeABI();
+            let _gas = myContract.methods.removeMember(_account).estimateGas({ from: accountAddress }).then();
+            var transactionObject;
+            Promise.all([_nonce, _chainid, _gassPrice, _gas])
+                .then(function(values) {
+                    console.log(values[0], values[1], values[2], values[3])
+                    transactionObject = {
+                        to: contractAddress,
+                        from: accountAddress,
+                        data: encoded_tx,
+                        value: '0x0',
+                        nonce: web3.utils.toHex(values[0]),
+                        chainId: web3.utils.toHex(values[1]),
+                        gasPrice: web3.utils.toHex(values[2]),
+                        gas: web3.utils.toHex(values[3]),
+                        networkId: 3 ,
+                    };
+                    console.log(transactionObject);
+                    web3.eth.accounts.signTransaction(transactionObject, privateKey)
+                        .then((res) => {
+                            web3.eth.sendSignedTransaction(res.rawTransaction)
+                                .on('receipt', (res) => {
+                                    //$('#addMemberPanel').append("<p>One member added</p>");
+                                    console.log(res);
+                                });
+                        }).catch((err) => {
+                            //$('#addMemberPanel').append("<p>"+err+"</p>");
+                            console.log(err);
+                        });       
+                });
+        }
+        var temp="0x";
+        function addProposal(){
+            var accountAddress=$('#accountAddress3').val();
+            var privateAddress=$('#txtPrivate3').val();
+            privateAddress='0x'+privateAddress;
+            temp=web3.eth.accounts.privateKeyToAccount(privateAddress)['address'];
+            var amount=$('#numAmount').val();
+            var deadLine=$('#numProposal').val();
+            var description=$('#txtDescription').val();
+            var details=$('#txtDetails').val();
+            var memberAccount2=$('#txtAddress2').val();
+            var memberName2=$('#txtName2').val();
+            var attachment=$('#txtAttachment').val();
+
+            if($('input[name=rdbProposal]').eq(0).is(":checked")){
+                memberAccount2='Without address';
+                memberName2="without name";
+            }else if($('input[name=rdbProposal]').eq(1).is(":checked")){
+                if(memberAccount2==''){
+                    alert("Address is null!");
+                }else if(memberName2==''){
+                    alert("Name is null!");
+                }
+            }else if($('input[name=rdbProposal]').eq(2).is(":checked")){
+                if(memberAccount2==''){
+                    alert("Address is null!");
+                }
+            }
+
+            if(temp != accountAddress){
+                alert("Private key is not correct!");
+            }else  if(!web3.utils.isAddress(accountAddress)){
+                alert("Input address is not valid!");
+            }else if(privateAddress==''){
+                    alert('Private key is null!');
+            }else if(amount==''){
+                alert('Amount is null!');
+            }else if(deadLine==''){
+                alert('Dead line is null!');
+            }else if(description==''){
+                alert('Description is null!');
+            }else if(details==''){
+                alert('Detail is null!');
+            }else if(attachment==''){
+                alert('Attachment is null!');
+            }else{
+                    let _nonce = web3.eth.getTransactionCount(accountAddress).then();
+                    let _chainid = web3.eth.net.getId().then();
+                    let _gassPrice = web3.eth.getGasPrice().then();
+                    
+                    let encoded_tx = myContract.methods.newProposal(accountAddress,amount,deadLine,
+                    proposalType,memberAccount2,memberName2,description,details,attachment).encodeABI();
+                    
+                    let _gas = myContract.methods.newProposal(accountAddress,amount,deadLine,
+                    proposalType,memberAccount2,memberName2,description,details,attachment).estimateGas({ from: accountAddress }).then();
+                    
+                    var transactionObject;
+                    Promise.all([_nonce, _chainid, _gassPrice, _gas])
+                    .then(function(values) {
+                        console.log(values[0], values[1], values[2], values[3])
+                        transactionObject = {
+                            to: contractAddress,
+                            from: accountAddress,
+                            data: encoded_tx,
+                            value: '0x0',
+                            nonce: web3.utils.toHex(values[0]),
+                            chainId: web3.utils.toHex(values[1]),
+                            gasPrice: web3.utils.toHex(values[2]),
+                            gas: web3.utils.toHex(values[3]),
+                            networkId: 3 ,
+                        };
+                        console.log(transactionObject);
+                        web3.eth.accounts.signTransaction(transactionObject, privateAddress)
+                            .then((res) => {
+                                web3.eth.sendSignedTransaction(res.rawTransaction)
+                                    .on('receipt', (res) => {
+                                        //$('#answerAddProposal').html("One proposal added");
+                                        console.log(res);
+                                    });
+                            }).catch((err) => {
+                                //$('#answerAddProposal').html(err);
+                                console.log(err);
+                            });       
+                    });
+            }
+        }
+        function getProposal(){
+            var accountAddress=$('#accountAddress4').val();
+            if(!web3.utils.isAddress(accountAddress)){
+                alert('Input address is not valid!');
+            }else{
+                var myId=$("#numGetProposal").val();
+                $('#proposalInfo').show();
+                $('#proposalInfo').css('height','400px');
+                myContract.methods.getProposal(myId).call({from:accountAddress},function(err,res){
+                    if(!err){
+                        var result=res[7];
+                        var result="Address: <span>"+res[0]+" </span><br/>Amount: <span>"+res[1]
+                            +" </span><br/>Description: <span>"+res[2]+" </span><br/>Details: <span>"+res[3]
+                            +" </span><br/>Minimum execution date: <span>"+res[4]+" </span><br/>Executed: <span>"+res[5]
+                            +" </span><br/>Number of votes: <span>"+res[6] +" </span><br/>Current result: <span>"+res[7];
+                        if(Number(res[8])==1){
+                            $('#proposalInfo').css('height','500px');
+                            result+="<br/></span>Account: <span>"+res[9]+"<br/></span> Name: <span>"+res[10]+"</span>";
+                        }
+                        if(Number(res[8])==2){
+                            $('#proposalInfo').css('height','450px');
+                            result+="<br/></span> Name: <span>"+res[9]+"</span>";
+                        }
+                        $('#proposalInfo').html(result);
+                    }else{
+                        $('#proposalInfo').html(err);
+                    }
+                });
+            }
+        }
+        function vote(){
+            var privateKey='0x';
+            privateKey+=$('#txtPrivate2').val();
+
+            var myAccount=$('#accountAddress5').val();
+            var justification=$('#txtJustification').val();
+
+            if(web3.eth.accounts.privateKeyToAccount(privateKey)['address']!=myAccount){
+                alert('Private key is wrong!');
+            }else  if(!web3.utils.isAddress(myAccount)){
+                alert('Input address is not valid');
+            }else if ($('#txtPrivate2').val()==''){
+                alert('Private key is null!');    
+            }else if(justification == ''){
+                alert('Justification is null!')
+            }else{
+                var myId=$('#numForVote').val();
+                var support=false;
+                if($('#chkForVote').is(':checked')){
+                    support=true;
+                }
+                let _nonce = web3.eth.getTransactionCount(myAccount).then();
+                let _chainid = web3.eth.net.getId().then();
+                let _gassPrice = web3.eth.getGasPrice().then();
+                let encoded_tx = myContract.methods.vote(myId,support,justification).encodeABI();
+                let _gas = myContract.methods.vote(myId,support,justification).estimateGas({ from: myAccount }).then();
+                var transactionObject;
+                Promise.all([_nonce, _chainid, _gassPrice, _gas])
+                    .then(function(values) {
+                        console.log(values[0], values[1], values[2], values[3])
+                        transactionObject = {
+                            to: contractAddress,
+                            from: myAccount,
+                            data: encoded_tx,
+                            value: '0x0',
+                            nonce: web3.utils.toHex(values[0]),
+                            chainId: web3.utils.toHex(values[1]),
+                            gasPrice: web3.utils.toHex(values[2]),
+                            gas: web3.utils.toHex(values[3]),
+                            networkId: 3 ,
+                        };
+                        console.log(transactionObject);
+                        web3.eth.accounts.signTransaction(transactionObject, privateKey)
+                            .then((res) => {
+                                web3.eth.sendSignedTransaction(res.rawTransaction)
+                                    .on('receipt', (res) => {
+                                        //$('#voteResult').html(res);
+                                        console.log(res);
+                                    });
+                            }).catch((err) => {
+                                //$('#voteResult').html(res);
+                                console.log(err);
+                            });       
+                    });
+            }
+        }
+        function exec(){
+            var privateKey='0x';
+            privateKey+=$('#txtPrivate4').val();
+            var accountAddress=$('#accountAddress6').val();
+            if(web3.eth.accounts.privateKeyToAccount(privateKey)['address']!=accountAddress){
+                alert('Private key is not correct!');
+            }else if(!web3.utils.isAddress(accountAddress)){
+                alert('Input address is not valid!')
+            }else{
+                var myId=$('#numForExec').val();
+                
+                let _nonce = web3.eth.getTransactionCount(accountAddress).then();
+                let _chainid = web3.eth.net.getId().then();
+                let _gassPrice = web3.eth.getGasPrice().then();
+                let encoded_tx = myContract.methods.executeProposal(myId).encodeABI();
+                let _gas = myContract.methods.executeProposal(myId).estimateGas({ from: accountAddress }).then();
+                var transactionObject;
+                Promise.all([_nonce, _chainid, _gassPrice, _gas])
+                    .then(function(values) {
+                        console.log(values[0], values[1], values[2], values[3])
+                        transactionObject = {
+                            to: contractAddress,
+                            from: accountAddress,
+                            data: encoded_tx,
+                            value: '0x0',
+                            nonce: web3.utils.toHex(values[0]),
+                            chainId: web3.utils.toHex(values[1]),
+                            gasPrice: web3.utils.toHex(values[2]),
+                            gas: web3.utils.toHex(values[3]),
+                            networkId: 3 ,
+                        };
+                        console.log(transactionObject);
+                        web3.eth.accounts.signTransaction(transactionObject, privateKey)
+                            .then((res) => {
+                                web3.eth.sendSignedTransaction(res.rawTransaction)
+                                    .on('receipt', (res) => {
+                                        //$('#executeResult').html(res);
+                                        console.log(res);
+                                    });
+                            }).catch((err) => {
+                                //$('#executeResult').html(err);
+                                console.log(err);
+                            });       
+                    });
+            }
+        }
+        function createAccount(){
+            var myAddress=web3.eth.accounts.create();
+            var publicKey=myAddress.address;
+            var privateKey=myAddress.privateKey;
+            $('#publicPanel').html(publicKey);
+            $('#privatePanel').html(privateKey);
+        }
+    </script>
+</body>
+</html>
